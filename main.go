@@ -3,10 +3,8 @@ package main
 import (
 	"log"
 
-	"./commands"
+	"github.com/xescugc/got/commands"
 )
-
-var ()
 
 func init() {
 }
