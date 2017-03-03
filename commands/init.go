@@ -7,6 +7,8 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
+	"github.com/xescugc/got/entities"
+	"github.com/xescugc/got/utils"
 )
 
 var (
@@ -25,7 +27,7 @@ var (
 			}
 
 			current_config_file := path.Join(wd, ".got.json")
-			exists, err := ExistsPath(current_config_file)
+			exists, err := utils.ExistsPath(current_config_file)
 			if err != nil {
 				return err
 			}
@@ -36,13 +38,13 @@ var (
 
 			paths := strings.Split(wd, "/")
 			project_name := paths[len(paths)-1]
-			cf := NewConfigFile(project_name)
-			err = WriteStructTo(current_config_file, cf)
+			cf := entities.NewConfigFile(project_name)
+			err = utils.WriteStructTo(current_config_file, cf)
 			if err != nil {
 				return err
 			}
 
-			projects, err := GetProjects()
+			projects, err := entities.GetProjects()
 			if err != nil {
 				return err
 			}
