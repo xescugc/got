@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/xescugc/got/commands"
+	"github.com/xescugc/got/cmd"
 )
 
 func init() {

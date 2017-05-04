@@ -25,28 +25,36 @@ func NewTask(project string) *Task {
 	}
 }
 
-func (t *Task) filename() string {
-	return fmt.Sprintf("%v-%v_%v.json", t.Start.Format("20060102"), t.Start.Format("150405"), t.Project)
-}
-
-func (t *Task) directory() string {
-	return path.Join(utils.DataHome, t.Start.Format("2006"), t.Start.Format("01"))
-}
-
-func (t *Task) PathToTask() string {
-	return path.Join(t.directory(), t.filename())
-}
-
-func (t *Task) Save() error {
-	err := utils.WriteStructTo(t.PathToTask(), t)
+func (t *Task) Save(e *Env) error {
+	err := utils.WriteStructTo(t.PathToTask(e), t)
 	if os.IsNotExist(err) {
-		if err = os.MkdirAll(t.directory(), 0755); err != nil {
+		if err = os.MkdirAll(t.directory(e), 0755); err != nil {
 			return err
 		}
-		return t.Save()
+		return t.Save(e)
 	}
 	if err != nil {
 		return err
 	}
 	return nil
+}
+
+func (t *Task) PathToTask(e *Env) string {
+	return path.Join(t.directory(e), t.filename())
+}
+
+func (t *Task) SetWorking(e *Env) error {
+	return utils.WriteTo(path.Join(e.DataHome, "current"), []byte(t.PathToTask(e)))
+}
+
+func IsWorking(e *Env) (bool, error) {
+	return utils.ExistsPath(path.Join(e.DataHome, "current"))
+}
+
+func (t *Task) filename() string {
+	return fmt.Sprintf("%v-%v_%v.json", t.Start.Format("20060102"), t.Start.Format("150405"), t.Project)
+}
+
+func (t *Task) directory(e *Env) string {
+	return path.Join(e.DataHome, t.Start.Format("2006"), t.Start.Format("01"))
 }

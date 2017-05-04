@@ -9,18 +9,15 @@ import (
 
 type Projects map[string]string
 
-func (p Projects) Save() error {
-	return utils.WriteStructTo(utils.ProjectsPath, p)
-}
-
-func GetProjects() (Projects, error) {
-	exists, err := utils.ExistsPath(utils.ProjectsPath)
-	var projects Projects
+func GetProjects(e *Env) (Projects, error) {
+	exists, err := utils.ExistsPath(e.ProjectsPath)
 	if err != nil {
 		return nil, err
 	}
+
+	var projects Projects
 	if exists {
-		data, err := ioutil.ReadFile(utils.ProjectsPath)
+		data, err := ioutil.ReadFile(e.ProjectsPath)
 		if err != nil {
 			return nil, err
 		}
@@ -30,4 +27,8 @@ func GetProjects() (Projects, error) {
 	}
 
 	return projects, nil
+}
+
+func (p Projects) Save(e *Env) error {
+	return utils.WriteStructTo(e.ProjectsPath, p)
 }
