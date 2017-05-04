@@ -63,4 +63,6 @@ func (e *Env) SetUp() error {
 }
 
 func (e *Env) Clean() {
+	os.RemoveAll(e.DataHome)
+	os.RemoveAll(e.ConfigHome)
 }

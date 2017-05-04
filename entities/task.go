@@ -25,6 +25,10 @@ func NewTask(project string) *Task {
 	}
 }
 
+func IsWorking(e *Env) (bool, error) {
+	return utils.ExistsPath(path.Join(e.DataHome, "current"))
+}
+
 func (t *Task) Save(e *Env) error {
 	err := utils.WriteStructTo(t.PathToTask(e), t)
 	if os.IsNotExist(err) {
@@ -45,10 +49,6 @@ func (t *Task) PathToTask(e *Env) string {
 
 func (t *Task) SetWorking(e *Env) error {
 	return utils.WriteTo(path.Join(e.DataHome, "current"), []byte(t.PathToTask(e)))
-}
-
-func IsWorking(e *Env) (bool, error) {
-	return utils.ExistsPath(path.Join(e.DataHome, "current"))
 }
 
 func (t *Task) filename() string {

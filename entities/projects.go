@@ -3,6 +3,7 @@ package entities
 import (
 	"encoding/json"
 	"io/ioutil"
+	"os"
 
 	"github.com/xescugc/got/utils"
 )
@@ -31,4 +32,10 @@ func GetProjects(e *Env) (Projects, error) {
 
 func (p Projects) Save(e *Env) error {
 	return utils.WriteStructTo(e.ProjectsPath, p)
+}
+
+func (p Projects) Clean(e *Env) {
+	for _, path := range p {
+		os.Remove(path)
+	}
 }
