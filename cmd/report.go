@@ -1,29 +1,29 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/spf13/cobra"
 	"github.com/xescugc/got/entities"
 )
 
 var (
-	cleanCmd = &cobra.Command{
-		Use:   "clean",
-		Short: "Clean all the data",
-		Long:  "Clean all the data related to 'got' (history, project files ...)",
+	reportCmd = &cobra.Command{
+		Use:   "report",
+		Short: "Report all the work",
+		Long:  "Report all the work filtered with flags",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			env, err := entities.NewEnv()
 			if err != nil {
 				return err
 			}
 
-			projects, err := entities.GetProjects(env)
+			ts, err := entities.NewReport(env)
 			if err != nil {
 				return err
 			}
 
-			projects.Clean(env)
-
-			env.Clean()
+			fmt.Println(ts)
 
 			return nil
 		},
@@ -31,5 +31,5 @@ var (
 )
 
 func init() {
-	RootCmd.AddCommand(cleanCmd)
+	RootCmd.AddCommand(reportCmd)
 }

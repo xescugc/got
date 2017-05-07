@@ -19,7 +19,7 @@ func WriteTo(path string, data []byte) error {
 }
 
 func WriteStructTo(path string, data interface{}) error {
-	b, err := json.Marshal(data)
+	b, err := json.MarshalIndent(data, "", "  ")
 	if err != nil {
 		return err
 	}

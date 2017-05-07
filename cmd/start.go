@@ -1,4 +1,4 @@
-package commands
+package cmd
 
 import (
 	"errors"
@@ -33,11 +33,8 @@ var (
 			}
 
 			task := entities.NewTask(c.Project)
-			if err = task.Save(env); err != nil {
-				return err
-			}
 
-			if err = task.SetWorking(env); err != nil {
+			if err := task.StartWorking(env); err != nil {
 				return err
 			}
 
