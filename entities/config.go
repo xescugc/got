@@ -10,6 +10,8 @@ import (
 	"github.com/xescugc/got/utils"
 )
 
+// ConfigFile defines the structure of the file used to configure
+// a project
 type ConfigFile struct {
 	Project string `json:"project"`
 
@@ -17,10 +19,12 @@ type ConfigFile struct {
 	Path   string `json:"-"`
 }
 
+// NewConfigFile creates a ConfigFile witht the provided name
 func NewConfigFile(project string) *ConfigFile {
 	return &ConfigFile{Project: project}
 }
 
+// GetConfig returns the current configuration of the project you are in
 func GetConfig() (*ConfigFile, error) {
 	wd, err := os.Getwd()
 	if err != nil {
@@ -56,6 +60,7 @@ func GetConfig() (*ConfigFile, error) {
 
 }
 
+// Save stores the ConfigFile to disk on the corresponding path
 func (c *ConfigFile) Save() error {
 	return utils.WriteStructTo(c.Path, c)
 }

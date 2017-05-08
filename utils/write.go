@@ -5,6 +5,7 @@ import (
 	"os"
 )
 
+// WriteTo writes data to the given path
 func WriteTo(path string, data []byte) error {
 	f, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE, 0644)
 
@@ -18,6 +19,7 @@ func WriteTo(path string, data []byte) error {
 	return nil
 }
 
+// WriteStructTo writes a struct of data to the given path
 func WriteStructTo(path string, data interface{}) error {
 	b, err := json.MarshalIndent(data, "", "  ")
 	if err != nil {
@@ -26,6 +28,7 @@ func WriteStructTo(path string, data interface{}) error {
 	return WriteTo(path, b)
 }
 
+// ExistsPath validates if the paths exists
 func ExistsPath(path string) (bool, error) {
 	_, err := os.Stat(path)
 	if err == nil {

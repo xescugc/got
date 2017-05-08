@@ -7,6 +7,7 @@ import (
 	"github.com/xescugc/got/utils"
 )
 
+// Env type holds all the data destinations for 'got'
 type Env struct {
 	DataHome       string
 	ConfigHome     string
@@ -14,6 +15,8 @@ type Env struct {
 	RootConfigPath string
 }
 
+// NewEnv initialize the Env with all the data, with is read from the
+// system ENV. It follows the https://specifications.freedesktop.org/basedir-spec/latest/ convention
 func NewEnv() (*Env, error) {
 	env := &Env{}
 
@@ -37,6 +40,7 @@ func NewEnv() (*Env, error) {
 	return env, err
 }
 
+// SetUp creates the needed directories if some is missing
 func (e *Env) SetUp() error {
 	for _, path := range []string{e.DataHome, e.ConfigHome} {
 		exists, err := utils.ExistsPath(path)
@@ -62,6 +66,8 @@ func (e *Env) SetUp() error {
 	return nil
 }
 
+// Clean removes all the data that the program has generated
+// including the .go.json on each project
 func (e *Env) Clean() {
 	os.RemoveAll(e.DataHome)
 	os.RemoveAll(e.ConfigHome)

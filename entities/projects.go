@@ -8,8 +8,12 @@ import (
 	"github.com/xescugc/got/utils"
 )
 
+// Projects hold the information of all the known projects
+// initialized.
+// The structure is project_name => path_to_config_file
 type Projects map[string]string
 
+// GetProjects returns all the Projects from the projects.json file
 func GetProjects(e *Env) (Projects, error) {
 	exists, err := utils.ExistsPath(e.ProjectsPath)
 	if err != nil {
@@ -30,10 +34,12 @@ func GetProjects(e *Env) (Projects, error) {
 	return projects, nil
 }
 
+// Save stores the Projects to the the projects.json file
 func (p Projects) Save(e *Env) error {
 	return utils.WriteStructTo(e.ProjectsPath, p)
 }
 
+// Clean removes all the Projects config files that it knows of
 func (p Projects) Clean(e *Env) {
 	for _, path := range p {
 		os.Remove(path)
