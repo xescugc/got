@@ -23,7 +23,7 @@ var (
 				return err
 			}
 			if !working {
-				return errors.New("You don't have any task")
+				return errors.New("You don't have any task running")
 			}
 
 			t, err := entities.NewTaskFromCurrent(env)
