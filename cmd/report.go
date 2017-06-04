@@ -81,5 +81,9 @@ func getFilterOption() ([]entities.FilterOption, error) {
 		}
 	}
 
+	if len(project) > 0 {
+		fo = append(fo, entities.WithFilterProject(project))
+	}
+
 	return fo, nil
 }

@@ -111,12 +111,24 @@ func isValidPath(rf *ReportFilter, p string) bool {
 	}
 
 	_, file := filepath.Split(p)
-	date, err := time.Parse("20060102-150405", strings.Split(file, "_")[0])
+	sfile := strings.Split(file, "_")
+	if len(sfile) < 2 {
+		return false
+	}
+	d := sfile[0]
+	project := strings.TrimSuffix(sfile[1], ".json")
+	date, err := time.Parse("20060102-150405", d)
 	if err != nil {
 		return false
 	}
 	if date.After(rf.From) && date.Before(rf.To) {
-		return true
+		if len(rf.Project) > 0 {
+			if rf.Project == project {
+				return true
+			}
+		} else {
+			return true
+		}
 	}
 
 	return false
