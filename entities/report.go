@@ -99,7 +99,7 @@ func NewReport(e *Env, rf *ReportFilter) (*Report, error) {
 func (r Report) String() string {
 	result := fmt.Sprintf("Projects worked and time (%s - %s ):\n\n", r.rf.From.Format("02/01/2006"), r.rf.To.Format("02/01/2006"))
 	for _, p := range r.tasks {
-		result += fmt.Sprintf("%s: \t%s\n", p.Name, p.Duration())
+		result += fmt.Sprintf("%s: %s\n", fmt.Sprintf("%15s", p.Name), p.Duration())
 	}
 	return result
 }
