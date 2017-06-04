@@ -6,7 +6,7 @@ import (
 )
 
 func DateRange(t time.Time, i string) (from time.Time, to time.Time, err error) {
-	now := time.Now()
+	now := t
 	currentYear, currentMonth, currentDay := now.Date()
 	currentLocation := now.Location()
 

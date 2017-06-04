@@ -13,6 +13,7 @@ var (
 	from string
 	to   string
 	this string
+	last string
 
 	reportCmd = &cobra.Command{
 		Use:   "report",
@@ -49,7 +50,8 @@ var (
 func init() {
 	reportCmd.Flags().StringVarP(&from, "from", "f", "", "The FROM date where the report will start (dd/mm/yyyy)")
 	reportCmd.Flags().StringVarP(&to, "to", "t", "", "The TO date where the report will end (dd/mm/yyyy)")
-	reportCmd.Flags().StringVarP(&this, "this", "", "", "Fast way to report units of time (year, month, day)")
+	reportCmd.Flags().StringVarP(&this, "this", "", "", "Fast way to report ranges of time of this: year, month, day)")
+	reportCmd.Flags().StringVarP(&last, "last", "", "", "Fast way to report ranges of time of the last: year, month, day)")
 
 	RootCmd.AddCommand(reportCmd)
 }
@@ -59,6 +61,20 @@ func getFilterOption() ([]entities.FilterOption, error) {
 
 	if len(this) > 0 {
 		from, to, err := utils.DateRange(time.Now(), this)
+		if err != nil {
+			return fo, err
+		}
+		fo = append(fo, entities.WithFilterTo(to), entities.WithFilterFrom(from))
+	} else if len(last) > 0 {
+		t := time.Now()
+		if last == "day" {
+			t = t.AddDate(0, 0, -1)
+		} else if last == "month" {
+			t = t.AddDate(0, -1, 0)
+		} else if last == "year" {
+			t = t.AddDate(-1, 0, 0)
+		}
+		from, to, err := utils.DateRange(t, last)
 		if err != nil {
 			return fo, err
 		}
