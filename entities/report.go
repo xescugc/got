@@ -5,9 +5,10 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-	"strconv"
 	"strings"
 	"time"
+
+	"github.com/xescugc/got/utils"
 )
 
 // Project hold the data of one Project
@@ -50,42 +51,23 @@ type ReportFilter struct {
 	Project string
 }
 
-func (rf ReportFilter) FromYear() int {
-	y, _ := strconv.Atoi(rf.From.Format("2006"))
-	return y
-}
-
-func (rf ReportFilter) FromMonth() int {
-	m, _ := strconv.Atoi(rf.From.Format("01"))
-	return m
-}
-
-func (rf ReportFilter) ToYear() int {
-	y, _ := strconv.Atoi(rf.To.Format("2006"))
-	return y
-}
-
-func (rf ReportFilter) ToMonth() int {
-	m, _ := strconv.Atoi(rf.To.Format("01"))
-	return m
-}
-
 type FilterOption func(*ReportFilter)
 
 func WithFilterFrom(f time.Time) FilterOption { return func(rf *ReportFilter) { rf.From = f } }
 func WithFilterTo(t time.Time) FilterOption   { return func(rf *ReportFilter) { rf.To = t } }
 func WithFilterProject(p string) FilterOption { return func(rf *ReportFilter) { rf.Project = p } }
 
-func NewReportFilter(filters ...FilterOption) *ReportFilter {
-	rf := &ReportFilter{
-		From: time.Now(),
-		To:   time.Now(),
+func NewReportFilter(filters ...FilterOption) (*ReportFilter, error) {
+	from, to, err := utils.DateRange(time.Now(), "month")
+	if err != nil {
+		return nil, err
 	}
+	rf := &ReportFilter{From: from, To: to}
 
 	for _, f := range filters {
 		f(rf)
 	}
-	return rf
+	return rf, nil
 }
 
 // NewReport initializes a new reporter and populates it
@@ -128,19 +110,12 @@ func isValidPath(rf *ReportFilter, p string) bool {
 		return false
 	}
 
-	dir := strings.Split(filepath.Dir(p), string(filepath.Separator))
-
-	year, err := strconv.Atoi(dir[len(dir)-2])
+	_, file := filepath.Split(p)
+	date, err := time.Parse("20060102-150405", strings.Split(file, "_")[0])
 	if err != nil {
 		return false
 	}
-
-	month, err := strconv.Atoi(dir[len(dir)-1])
-	if err != nil {
-		return false
-	}
-
-	if year >= rf.FromYear() && month >= rf.FromMonth() && year <= rf.ToYear() && month <= rf.ToMonth() {
+	if date.After(rf.From) && date.Before(rf.To) {
 		return true
 	}
 

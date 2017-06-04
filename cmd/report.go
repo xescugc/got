@@ -6,6 +6,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/xescugc/got/entities"
+	"github.com/xescugc/got/utils"
 )
 
 var (
@@ -28,7 +29,10 @@ var (
 				return err
 			}
 
-			rf := entities.NewReportFilter(fo...)
+			rf, err := entities.NewReportFilter(fo...)
+			if err != nil {
+				return err
+			}
 
 			ts, err := entities.NewReport(env, rf)
 			if err != nil {
@@ -54,24 +58,10 @@ func getFilterOption() ([]entities.FilterOption, error) {
 	fo := make([]entities.FilterOption, 0)
 
 	if len(this) > 0 {
-		var from, to time.Time
-		now := time.Now()
-		currentYear, currentMonth, _ := now.Date()
-		currentLocation := now.Location()
-
-		if this == "month" {
-			from = time.Date(currentYear, currentMonth, 1, 0, 0, 0, 0, currentLocation)
-			to = from.AddDate(0, 1, -1)
-		} else if this == "year" {
-			from = time.Date(currentYear, 1, 1, 0, 0, 0, 0, currentLocation)
-			to = from.AddDate(0, 12, -1)
-		} else if this == "day" {
-			from = now
-			to = now
-		} else {
-			return fo, fmt.Errorf("Not a valid 'this': %s.\nThe valid ones are: month, year and day", this)
+		from, to, err := utils.DateRange(time.Now(), this)
+		if err != nil {
+			return fo, err
 		}
-
 		fo = append(fo, entities.WithFilterTo(to), entities.WithFilterFrom(from))
 	} else {
 		if len(from) > 0 {
