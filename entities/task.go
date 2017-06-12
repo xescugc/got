@@ -67,16 +67,11 @@ func (t *Task) StartWorking(e *Env) error {
 
 // StopWorking sets the task as finished and removes the 'current'
 func (t *Task) StopWorking(e *Env) error {
-	stop := time.Now()
-	t.Stop = &stop
-	d := stop.Sub(*t.Start)
-
-	s, err := strconv.Atoi(fmt.Sprintf("%.0f", d.Seconds()))
+	err := t.stop()
 	if err != nil {
 		return err
 	}
 
-	t.Seconds = s
 	err = t.Save(e)
 	if err != nil {
 		return err
@@ -108,6 +103,31 @@ func (t *Task) Save(e *Env) error {
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+func (t *Task) String() string {
+	if t.Seconds == 0 {
+		err := t.stop()
+		if err != nil {
+			return err.Error()
+		}
+	}
+	return fmt.Sprintf("Working %s on %s", t.Duration(), t.Project)
+}
+
+//stop sets the Stop attribute to the current Time and calculates de seconds
+func (t *Task) stop() error {
+	stop := time.Now()
+	t.Stop = &stop
+	d := stop.Sub(*t.Start)
+
+	s, err := strconv.Atoi(fmt.Sprintf("%.0f", d.Seconds()))
+	if err != nil {
+		return err
+	}
+
+	t.Seconds = s
 	return nil
 }
 
