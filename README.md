@@ -34,6 +34,14 @@ The `start` command starts tracking the current project.
 $> got start
 ```
 
+### current 
+
+The `current` command shows the progress of the current task
+
+```
+$> got current
+```
+
 ### stop
 
 The `stop` command marks the current task as completed
