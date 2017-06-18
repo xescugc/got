@@ -19,6 +19,9 @@ func DateRange(t time.Time, i string) (from time.Time, to time.Time, err error) 
 	} else if i == "day" {
 		from = time.Date(currentYear, currentMonth, currentDay, 0, 0, 0, 0, currentLocation)
 		to = now
+	} else if i == "custom" {
+		from = now
+		to = time.Now()
 	} else {
 		err = fmt.Errorf("Not valid '%s'.\nThe valid ones are: month, year and day", i)
 	}

@@ -65,8 +65,8 @@ This lib is still in development, the "manin" functionality is implemented but i
 
 * [ ] Add Test
 * [ ] Add `--tags|t` to the `start` and `report` to be able to tag the projects (to filter them on the `report`)
-* [ ] Add a col feature that [App::TimeTracker][tracker] has which is the "multiple configurations files merge", basically the configuration file is a hierarchy of all the `.got.json` files from the current direcotry/project to the $HOME. This way you can define options to the configuration file and all the children direcotries will have them (ex: tags)
-* [ ] Add `flags` to the `report` command to filter the data
+* [ ] Add a cool feature that [App::TimeTracker][tracker] has, which is the "multiple configurations files merge", basically the configuration file is a hierarchy of all the `.got.json` files from the current direcotry/project to the $HOME. This way you can define options to the configuration file and all the children direcotries will have them (ex: tags)
+* [x] Add `flags` to the `report` command to filter the data
 
 
 [tracker]: https://metacpan.org/pod/distribution/App-TimeTracker/bin/tracker

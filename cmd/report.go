@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/spf13/cobra"
+	"github.com/xescugc/duration"
 	"github.com/xescugc/got/entities"
 	"github.com/xescugc/got/utils"
 )
@@ -51,7 +52,7 @@ func init() {
 	reportCmd.Flags().StringVarP(&from, "from", "f", "", "The FROM date where the report will start (dd/mm/yyyy)")
 	reportCmd.Flags().StringVarP(&to, "to", "t", "", "The TO date where the report will end (dd/mm/yyyy)")
 	reportCmd.Flags().StringVarP(&this, "this", "", "", "Fast way to report ranges of time of this: year, month, day)")
-	reportCmd.Flags().StringVarP(&last, "last", "", "", "Fast way to report ranges of time of the last: year, month, day)")
+	reportCmd.Flags().StringVarP(&last, "last", "", "", "Fast way to report ranges of time of the last: year, month, day or duration (ex: 1y2w)")
 
 	RootCmd.AddCommand(reportCmd)
 }
@@ -73,6 +74,16 @@ func getFilterOption() ([]entities.FilterOption, error) {
 			t = t.AddDate(0, -1, 0)
 		} else if last == "year" {
 			t = t.AddDate(-1, 0, 0)
+		} else {
+			d, err := duration.Parse(last)
+			if err != nil {
+				return fo, err
+			}
+			if d > 0 {
+				d = -d
+			}
+			last = "custom"
+			t = t.Add(d)
 		}
 		from, to, err := utils.DateRange(t, last)
 		if err != nil {
